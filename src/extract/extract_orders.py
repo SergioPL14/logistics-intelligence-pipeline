@@ -4,7 +4,8 @@ Joins:
   orders        -> customers      (customer_zip_code_prefix)
   order_items   -> products       (product_weight_g, summed per order)
 
-Output columns: order_id, customer_zip_code, order_purchase_timestamp, order_weight_g
+Output columns: order_id, customer_zip_code, customer_city, customer_state,
+                order_purchase_timestamp, order_weight_g
 """
 from __future__ import annotations
 
@@ -23,8 +24,18 @@ DEFAULT_OUTPUT_STEM = "orders"
 OUTPUT_COLUMNS = [
     "order_id",
     "customer_zip_code",
+    "customer_city",
+    "customer_state",
     "order_purchase_timestamp",
     "order_weight_g",
+]
+
+REQUIRED_COLUMNS = [
+    "order_id",
+    "customer_zip_code",
+    "customer_city",
+    "customer_state",
+    "order_purchase_timestamp",
 ]
 
 
@@ -51,7 +62,7 @@ def extract_orders(
     customers = _read_csv(
         source_dir,
         "olist_customers_dataset.csv",
-        ["customer_id", "customer_zip_code_prefix"],
+        ["customer_id", "customer_zip_code_prefix", "customer_city", "customer_state"],
     )
     items = _read_csv(
         source_dir,
@@ -92,7 +103,7 @@ def extract_orders(
     result = df[OUTPUT_COLUMNS].copy()
 
     before = len(result)
-    result = result.dropna(subset=["order_id", "customer_zip_code", "order_purchase_timestamp"])
+    result = result.dropna(subset=REQUIRED_COLUMNS)
     logger.info("Dropped %d rows with missing keys", before - len(result))
 
     logger.info("Extracted %d order rows", len(result))

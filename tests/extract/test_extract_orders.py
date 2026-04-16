@@ -47,8 +47,8 @@ def olist_source_dir(tmp_path: Path) -> Path:
             "customer_id": ["C1", "C2", "C3", "C5"],
             "customer_unique_id": ["U1", "U2", "U3", "U5"],
             "customer_zip_code_prefix": [12345, 99999, 1310, 54321],
-            "customer_city": ["x"] * 4,
-            "customer_state": ["SP"] * 4,
+            "customer_city": ["sao paulo", "rio de janeiro", "campinas", "santos"],
+            "customer_state": ["SP", "RJ", "SP", "SP"],
         }
     ).to_csv(src / "olist_customers_dataset.csv", index=False)
 

@@ -17,6 +17,8 @@ class Order(LogisticsModel):
     Attributes:
         order_id: Olist order UUID (non-empty).
         customer_zip_code: 5-character zero-padded US-style zip prefix.
+        customer_city: Customer city name (non-empty).
+        customer_state: 2-letter Brazilian state code (e.g. "SP", "RJ").
         order_purchase_timestamp: When the customer placed the order.
         order_weight_g: Sum of product weights across line items, in grams.
             Nullable because some Olist products lack a weight value.
@@ -24,6 +26,8 @@ class Order(LogisticsModel):
 
     order_id: str = Field(min_length=1)
     customer_zip_code: str
+    customer_city: str = Field(min_length=1)
+    customer_state: str = Field(min_length=2, max_length=2)
     order_purchase_timestamp: datetime
     order_weight_g: float | None = Field(default=None, ge=0)
 
