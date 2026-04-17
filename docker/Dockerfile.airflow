@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv (Astral's fast Python package manager)
 COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
 
-USER airflow
 COPY pyproject.toml uv.lock /tmp/
 RUN uv pip install --system --no-cache -r /tmp/pyproject.toml
+
+USER airflow
