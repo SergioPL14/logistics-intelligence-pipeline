@@ -26,6 +26,7 @@ def test_dag_task_dependencies() -> None:
 
     tasks = {t.task_id: t for t in dag.tasks}
 
+    assert tasks["extract_weather_task"].upstream_task_ids == {"extract_orders_task"}
     assert tasks["transform_silver_orders_task"].upstream_task_ids == {"extract_orders_task"}
     assert tasks["transform_silver_diesel_task"].upstream_task_ids == {"extract_diesel_task"}
     assert tasks["transform_silver_weather_task"].upstream_task_ids == {"extract_weather_task"}

@@ -122,10 +122,12 @@ def logistics_pipeline():
 
     # ── Dependencies ────────────────────────────────────────────────────────
 
-    # Phase 1: Extract (parallel)
+    # Phase 1: Extract (orders + diesel parallel; weather needs orders bronze)
     orders_done = extract_orders_task()
     diesel_done = extract_diesel_task()
     weather_done = extract_weather_task()
+
+    orders_done >> weather_done
 
     # Phase 2: Transform silver (parallel, but each waits for its extract)
     silver_orders_done = transform_silver_orders_task()
