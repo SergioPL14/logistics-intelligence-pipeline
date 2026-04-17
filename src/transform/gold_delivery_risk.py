@@ -43,6 +43,11 @@ def build_gold(
     orders = orders.sort_values("order_purchase_timestamp").reset_index(drop=True)
     diesel = diesel.sort_values("period").reset_index(drop=True)
 
+    # Align datetime resolution so merge_asof doesn't reject the key pair.
+    common_res = "us"
+    orders["order_purchase_timestamp"] = orders["order_purchase_timestamp"].dt.as_unit(common_res)
+    diesel["period"] = diesel["period"].dt.as_unit(common_res)
+
     joined = pd.merge_asof(
         orders,
         diesel[["period", "price_usd_per_gallon"]],

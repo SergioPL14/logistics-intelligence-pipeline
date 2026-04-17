@@ -85,7 +85,7 @@ def compute_risk(
         + SUBSCORE_WEIGHTS["wind"] * wind_score
         + SUBSCORE_WEIGHTS["precip"] * precip_score
     )
-    score = _clip01(score)
+    score = round(_clip01(score), 4)
 
     return DeliveryRiskScore(
         order_id=order_id,
