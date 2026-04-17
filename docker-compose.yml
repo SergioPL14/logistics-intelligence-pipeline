@@ -25,6 +25,7 @@ x-airflow-common: &airflow-common
     - ./plugins:/opt/airflow/plugins
     - ./data:/opt/airflow/data
     - ./tests:/opt/airflow/tests
+    - ./resources:/opt/airflow/resources
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     airflow-db:
