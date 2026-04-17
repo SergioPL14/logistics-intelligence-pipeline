@@ -93,14 +93,14 @@ The pipeline follows the **bronze → silver → gold** medallion pattern, where
 The pipeline is orchestrated as a single Airflow DAG with 8 tasks, designed to run on a configurable schedule (e.g. `@hourly`, `0 */2 * * *` for bi-hourly, or manual trigger):
 
 ```
-extract_orders ──► transform_silver_orders ──┐
-                                             │
-extract_diesel ──► transform_silver_diesel ──┼──► build_gold ──► load_to_postgres
-                                             │
-extract_weather ─► transform_silver_weather ─┘
+extract_orders ──┬──► transform_silver_orders ──┐
+                 │                               │
+                 └──► extract_weather ──► transform_silver_weather ──┐
+                                                                    │
+extract_diesel ─────► transform_silver_diesel ──────────────────────┼──► build_gold ──► load_to_postgres
 ```
 
-- **Extract tasks** run in parallel — pulling fresh data from all three sources concurrently
+- **Extract phase** — orders and diesel run in parallel; weather waits for orders (it reads bronze orders to determine the top-N delivery cities to query)
 - **Silver transforms** run in parallel after their respective extract completes
 - **Gold build** waits for all silver transforms, then joins and scores
 - **Load** writes the scored results to PostgreSQL for downstream consumption
