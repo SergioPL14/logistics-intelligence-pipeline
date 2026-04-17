@@ -367,7 +367,8 @@ With the Olist demo dataset, most scores cluster in the "low" band because histo
 | Improvement | Description | Impact |
 |-------------|------------|--------|
 | **Incremental loads** | Switch from full-replace to append/upsert with change detection | Faster runs, lower API usage, essential for hourly cadence at scale |
-| **Data quality checks** | Add Great Expectations or dbt tests between pipeline stages | Catch schema drift, null spikes, or anomalous values before they reach gold |
+| **Data quality checks** | Add Great Expectations or dbt tests between pipeline stages — validate row counts, null ratios, value ranges, and schema consistency after each transform | Catch schema drift, null spikes, or anomalous values before they reach gold; prevent silent data corruption |
+| **Structured logging** | Replace stdlib `logging` with `structlog` for JSON-formatted logs, and propagate a `run_id` correlation ID across all tasks within a DAG run | Enables log aggregation (ELK, Datadog), cross-task traceability, and faster root-cause analysis for pipeline failures |
 | **Alerting** | Slack/email notifications on DAG failure or data quality issues | Faster incident response for a pipeline that runs every hour |
 | **CI/CD** | GitHub Actions for lint + test + Docker build on every PR | Catch regressions before merge |
 | **Partitioned storage** | Partition gold tables by run timestamp for time-series analysis | Track how risk evolves over time, efficient querying |
